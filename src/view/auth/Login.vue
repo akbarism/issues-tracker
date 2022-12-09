@@ -11,21 +11,11 @@
     <Backdrop v-if="loading" />
     <q-card-section>
       <div class="mb-3">
-        <p class="q-mb-none text-weight-medium">username</p>
         <q-input
           outlined
           dense
           v-model="form.email"
-          color="orange"
-          class="rounded-lg"
-        />
-      </div>
-      <div class="mb-3">
-        <p class="q-mb-none text-weight-medium">password</p>
-        <q-input
-          outlined
-          dense
-          v-model="form.password"
+          @keyup.enter="login"
           color="orange"
           class="rounded-lg"
         />
@@ -71,7 +61,7 @@ const login = () => {
   loading.value = true;
   const auth = getAuth();
   let email = `${form.email}@gmail.com`;
-  signInWithEmailAndPassword(auth, email, form.password)
+  signInWithEmailAndPassword(auth, email, "Tes123tes@")
     .then((userCredential) => {
       const user = userCredential.user;
       emit("close");

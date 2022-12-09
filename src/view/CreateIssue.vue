@@ -111,6 +111,8 @@ const createData = async () => {
     by: store.user.name,
     createdAt: day().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
     status: "open",
+    day: day().format("DD"),
+    month: day().format("MM-YYYYY"),
   });
 
   for (let i in form) {

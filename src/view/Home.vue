@@ -1,36 +1,26 @@
 <template>
   <div class="row justify-center">
     <div class="break_point">
-      <div class="py-3 row justify-between items-center mb-3">
-        <q-avatar>
-          <img :src="ava" />
-        </q-avatar>
-        <q-btn
-          size="sm"
-          unelevated
-          icon="mdi-dots-vertical"
-          round
-          style="height: max-content"
-          @click="logout"
-        >
-        </q-btn>
-      </div>
+      <Navbar :store="store" />
+      <CardCounter @create="validateCreate" />
       <div class="row justify-between">
         <div class="row items-center mb-3">
           <q-icon size="sm" name="mdi-source-pull"></q-icon>
-          <p class="text-weight-bold ml-1 q-mb-none">Today's Issue</p>
+          <p class="text-weight-bold ml-1 q-mb-none">Open Issue</p>
         </div>
 
-        <q-btn
-          size="sm"
-          color="primary"
-          unelevated
-          class="text-capitalize"
-          style="height: max-content"
-          @click="validateCreate"
-        >
-          New Issue
-        </q-btn>
+        <router-link to="/all-issue">
+          <q-btn
+            flat
+            size="sm"
+            color="primary"
+            unelevated
+            class="text-capitalize text-weight-large"
+            style="height: max-content"
+          >
+            View All
+          </q-btn>
+        </router-link>
       </div>
       <div v-if="!vm.loading">
         <div v-if="vm.issue.length">
@@ -41,60 +31,7 @@
             flat
             bordered
           >
-            <q-card-section class="row justify-between no-wrap">
-              <div>
-                <p
-                  class="text-weight-bold q-mb-none title_"
-                  @click="toDetail(item.id)"
-                >
-                  {{ item.title }}
-                </p>
-                <p class="xsmall_txt q-mb-none text-grey mr-1">
-                  #{{ item.id }} on
-                  {{ day(item.created_at).format("DD MMMM YYYY") }}
-                </p>
-              </div>
-              <div class="column items-end">
-                <!-- <q-btn
-                  color="deep-orange"
-                  class="text-capitalize mb-2 px-2"
-                  unelevated
-                  size="sm"
-                  rounded
-                  style="height: max-content"
-                >
-                  <div class="row no-wrap">
-                    <q-icon
-                      class="mr-1"
-                      name="mdi-checkbox-blank-circle-outline"
-                    ></q-icon>
-                    open
-                  </div>
-                </q-btn> -->
-                <q-btn
-                  :color="
-                    item.status == 'open' ? 'deep-orange' : 'deep-purple-9'
-                  "
-                  class="text-capitalize px-2"
-                  unelevated
-                  size="sm"
-                  rounded
-                  style="height: max-content"
-                >
-                  <div class="row no-wrap">
-                    <q-icon
-                      class="mr-1"
-                      :name="`mdi-${
-                        item.status == 'open'
-                          ? 'checkbox-blank-circle-outline'
-                          : 'check-circle-outline'
-                      }`"
-                    ></q-icon>
-                    {{ item.status }}
-                  </div>
-                </q-btn>
-              </div>
-            </q-card-section>
+            <ItemIssue :item="item" />
           </q-card>
         </div>
       </div>
@@ -125,16 +62,19 @@ import {
   collection,
   setDoc,
   getDocs,
+  where,
   doc,
   orderBy,
+  query,
   getDoc,
 } from "firebase/firestore";
 import db from "../plugins/firebase.js";
-import ava from "../assets/img/jihoy.jpg";
 import day from "../plugins/Dayjs";
 import { useRoute, useRouter } from "vue-router";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { mainStore } from "../store/pinia";
+import CardCounter from "../components/CardCounter.vue";
+import ItemIssue from "../components/ItemIssue.vue";
+import Navbar from "../components/Navbar.vue";
 const store = mainStore();
 const router = useRouter();
 const route = useRoute();
@@ -143,11 +83,6 @@ const vm = reactive({
   loading: true,
   dialog: false,
 });
-
-const auth = getAuth();
-const logout = () => {
-  signOut(auth);
-};
 
 const validateCreate = () => {
   if (store.uid) {
@@ -159,10 +94,12 @@ const validateCreate = () => {
 
 const fetchData = async () => {
   vm.loading = true;
-  const res = await getDocs(
+  let q = query(
     collection(db, "issue"),
     orderBy("createdAt", "desc"),
+    where("status", "==", "open"),
   );
+  const res = await getDocs(q);
   let data = [];
   res.forEach((el) => {
     data.push(el.data());
@@ -171,17 +108,7 @@ const fetchData = async () => {
   vm.loading = false;
 };
 
-const toDetail = (id) => {
-  router.push(`/issue/${id}`);
-};
-
 onMounted(() => {
   fetchData();
 });
 </script>
-<style scoped>
-.title_:hover {
-  color: #ff9800;
-  cursor: pointer;
-}
-</style>

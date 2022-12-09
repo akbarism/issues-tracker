@@ -122,6 +122,7 @@
           </div>
           <div class="connector_x mb-3"></div>
           <q-btn
+            v-if="store.uid"
             unelevated
             class="text-capitalize"
             label="Give another response"
@@ -143,6 +144,15 @@
             :id="id"
             @close="vm.dialog = false"
             @fetchLog="getLog()"
+          />
+        </q-dialog>
+        <q-dialog v-model="vm.reopen">
+          <ReopenIssue
+            :dialog="vm.reopen"
+            :id="id"
+            @close="vm.reopen = false"
+            @fetchLog="getLog()"
+            @refetch="fetchData(false)"
           />
         </q-dialog>
         <q-dialog v-model="vm.login">
@@ -176,6 +186,7 @@ import db from "../plugins/firebase.js";
 import day from "../plugins/Dayjs";
 import { useRoute, useRouter } from "vue-router";
 import { mainStore } from "../store/pinia";
+import ReopenIssue from "./reopenIssue.vue";
 const store = mainStore();
 const router = useRouter();
 const route = useRoute();
@@ -186,6 +197,7 @@ const vm = reactive({
   sending: false,
   dialog: false,
   login: false,
+  reopen: false,
   issue: null,
   log: [],
 });
@@ -203,17 +215,21 @@ const fetchData = async (load) => {
 };
 
 const swtichStatus = async (state) => {
-  vm.sending = true;
-  await updateDoc(queryDetail, {
-    status: state == "open" ? "closed" : "open",
-  });
-  let msg = {
-    activity: state == "open" ? "closed this issue" : "reopened this issue",
-    icon: state == "open" ? "mdi-check-circle-outline" : "mdi-sync-circle",
-    catatan: "",
-  };
-  sendLog(msg);
-  fetchData(false);
+  if (state == "open") {
+    vm.sending = true;
+    await updateDoc(queryDetail, {
+      status: "closed",
+    });
+    let msg = {
+      activity: "closed this issue",
+      icon: "mdi-check-circle-outline",
+      catatan: "",
+    };
+    sendLog(msg);
+    fetchData(false);
+  } else {
+    vm.reopen = true;
+  }
 };
 
 const getLog = async (state) => {
