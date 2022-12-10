@@ -1,6 +1,7 @@
 <template>
   <div class="row justify-center">
     <div class="break_point q-py-md">
+      <Navbar />
       <div class="row items-center justify-between mb-3">
         <q-btn
           unelevated

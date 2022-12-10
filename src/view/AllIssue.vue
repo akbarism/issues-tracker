@@ -67,7 +67,6 @@
 
 <script setup>
 import { reactive, ref } from "@vue/reactivity";
-import Navbar from "../components/Navbar.vue";
 import { mainStore } from "../store/pinia";
 import { collection, orderBy, query, where, getDocs } from "firebase/firestore";
 import { onMounted } from "@vue/runtime-core";

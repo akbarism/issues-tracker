@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-center">
     <div class="break_point">
-      <Navbar :store="store" />
+      <Navbar />
       <CardCounter @create="validateCreate" />
       <div class="row justify-between">
         <div class="row items-center mb-3">
@@ -9,7 +9,7 @@
           <p class="text-weight-bold ml-1 q-mb-none">Open Issue</p>
         </div>
 
-        <router-link to="/all-issue" >
+        <router-link to="/all-issue">
           <q-btn
             flat
             size="sm"
@@ -74,7 +74,6 @@ import { useRoute, useRouter } from "vue-router";
 import { mainStore } from "../store/pinia";
 import CardCounter from "../components/CardCounter.vue";
 import ItemIssue from "../components/ItemIssue.vue";
-import Navbar from "../components/Navbar.vue";
 const store = mainStore();
 const router = useRouter();
 const route = useRoute();
