@@ -30,6 +30,15 @@
     border-bottom: 2px solid #D0D7DE;
 
 }
+
+@media (max-width: 480px) {
+    .break_point {
+        width: 100%;
+        padding: 10px;
+    }
+}
+
+/* css helper custom ================================================================== */
 .flexy {
     flex: 1;
 }
