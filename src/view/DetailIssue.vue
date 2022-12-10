@@ -181,6 +181,7 @@ import {
   updateDoc,
   query,
   orderBy,
+  onSnapshot,
 } from "firebase/firestore";
 import db from "../plugins/firebase.js";
 import day from "../plugins/Dayjs";
@@ -232,18 +233,20 @@ const swtichStatus = async (state) => {
   }
 };
 
-const getLog = async (state) => {
+const getLog = (state) => {
   vm.waiting = true;
-  const res = await getDocs(
+  const q = query(
     collection(db, "issue", id.value, "logs"),
-    orderBy("createdAt", "desc"),
+    orderBy("createdAt", "asc"),
   );
-  let data = [];
-  res.forEach((el) => {
-    data.push(el.data());
+  onSnapshot(q, (qs) => {
+    let data = [];
+    qs.forEach((el) => {
+      data.push(el.data());
+    });
+    vm.log = data;
+    vm.waiting = false;
   });
-  vm.log = data;
-  vm.waiting = false;
 };
 
 const sendLog = async (msg) => {

@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="rounded-lg" style="min-width: 450px; position: relative">
+  <q-card flat class="rounded-lg response_dialog" style="position: relative">
     <q-card-section>
       <div class="text-h6">Give a reponse</div>
     </q-card-section>
