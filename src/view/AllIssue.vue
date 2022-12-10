@@ -2,7 +2,7 @@
   <div class="row justify-center">
     <div class="break_point">
       <Navbar />
-      <div class="row mb-3">
+      <div class="row">
         <div v-for="(item, i) in tabs" :key="`tab-${i}`">
           <q-btn
             @click="changeTab(item)"
@@ -10,10 +10,34 @@
             class="text-capitalize mr-2 rounded-lg"
             :label="item"
             :flat="vm.state != item"
-            :color="vm.state == item ? 'blue' : 'grey'"
+            :color="vm.state == item ? 'primary' : 'grey'"
             size="md"
           />
         </div>
+      </div>
+      <div class="row justify-end mb-3">
+        <q-btn
+          size="sm"
+          color="primary"
+          unelevated
+          class="text-capitalize"
+          style="height: max-content"
+          :label="vm.label"
+        >
+          <q-menu v-if="project.length" :offset="[0, 5]">
+            <q-list dense style="min-width: 100px">
+              <q-item
+                clickable
+                v-close-popup
+                v-for="(item, i) in project"
+                :key="`proj-${i}`"
+                @click="selectProject(item)"
+              >
+                <q-item-section>{{ item }}</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
       </div>
       <div v-if="!vm.loading">
         <div v-if="store.issue.length">
@@ -42,10 +66,10 @@
 </template>
 
 <script setup>
-import { reactive } from "@vue/reactivity";
+import { reactive, ref } from "@vue/reactivity";
 import Navbar from "../components/Navbar.vue";
 import { mainStore } from "../store/pinia";
-import { collection, orderBy, query, where } from "firebase/firestore";
+import { collection, orderBy, query, where, getDocs } from "firebase/firestore";
 import { onMounted } from "@vue/runtime-core";
 import db from "../plugins/firebase";
 import ItemIssue from "../components/ItemIssue.vue";
@@ -56,9 +80,22 @@ const vm = reactive({
   loading: false,
   state: "open",
   project: "",
+  label: "pilih project",
 });
+
+const project = ref([]);
 const changeTab = (item) => {
   vm.state = item;
+  fetchData();
+};
+const fetchProjcect = async () => {
+  const res = await getDocs(collection(db, "project"));
+  res.forEach((el) => project.value.push(el.data().name));
+  project.value.push("All Project");
+};
+const selectProject = (item) => {
+  vm.label = item == "All Project" ? "Pilih Project" : `Project : ${item}`;
+  vm.project = item != "All Project" ? item : "";
   fetchData();
 };
 const fetchData = async () => {
@@ -95,6 +132,7 @@ const fetchData = async () => {
 };
 onMounted(() => {
   fetchData();
+  fetchProjcect();
 });
 </script>
 

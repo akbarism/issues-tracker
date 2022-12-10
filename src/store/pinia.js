@@ -26,6 +26,9 @@ export const mainStore = defineStore("main", {
         if (user) {
           this.uid = user.uid;
           this.getUser();
+        } else {
+          this.uid = null;
+          this.user = null;
         }
       });
     },

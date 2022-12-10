@@ -13,15 +13,49 @@
         </p>
       </div>
     </div>
-    <q-btn
-      size="sm"
-      unelevated
-      icon="mdi-dots-vertical"
-      round
-      style="height: max-content"
-      @click="logout"
-    >
-    </q-btn>
+    <div v-if="store">
+      <q-btn
+        size="sm"
+        unelevated
+        icon="mdi-dots-vertical"
+        round
+        style="height: max-content"
+      >
+        <q-menu>
+          <q-list dense style="min-width: 100px">
+            <q-item clickable v-close-popup v-if="store.user">
+              <q-item-section>Profile</q-item-section>
+            </q-item>
+            <q-item
+              clickable
+              v-close-popup
+              v-if="store.user && store.user.role == 1"
+            >
+              <q-item-section>Developer Mode</q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item clickable @click="logout" v-close-popup v-if="store.user">
+              <q-item-section>Logout</q-item-section>
+            </q-item>
+            <q-item
+              clickable
+              @click="vm.dialog = true"
+              v-close-popup
+              v-if="!store.user"
+            >
+              <q-item-section>Login</q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </q-btn>
+      <q-dialog v-model="vm.dialog">
+        <Login
+          :dialog="vm.dialog"
+          @close="vm.dialog = false"
+          @redirect="() => {}"
+        />
+      </q-dialog>
+    </div>
   </div>
 </template>
 
@@ -29,11 +63,15 @@
 import { mainStore } from "../store/pinia";
 import ava from "../assets/img/ava1.png";
 import { getAuth, signOut } from "firebase/auth";
-
+import { reactive } from "@vue/reactivity";
 const store = mainStore();
 const auth = getAuth();
-const logout = () => {
-  signOut(auth);
+const vm = reactive({
+  dialog: false,
+});
+const logout = async () => {
+  await signOut(auth);
+  store.checkAuth();
 };
 </script>
 

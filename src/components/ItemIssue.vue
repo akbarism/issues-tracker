@@ -5,7 +5,7 @@
         {{ item.title }}
       </p>
       <p class="xsmall_txt q-mb-none text-grey mr-1">
-        #{{ item.id }} on
+        {{ item.project }} on
         {{ day(item.created_at).format("DD MMMM YYYY") }}
       </p>
     </div>
