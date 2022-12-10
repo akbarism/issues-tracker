@@ -20,20 +20,6 @@
         <div class="col-6 pr-2">
           <q-card flat class="rounded-lg bg-grey-3 pa-2 row">
             <q-card
-              class="pa-3 rounded-lg bg-deep-purple-9 mr-3"
-              style="width: max-content"
-            >
-              <q-icon name="mdi-check-circle-outline" color="white"></q-icon>
-            </q-card>
-            <div class="flexy">
-              <p class="q-mb-none text-weight-bold">{{ store.count.close }}</p>
-              <p class="q-mb-none small_txt text-weight-medium">Closed Issue</p>
-            </div>
-          </q-card>
-        </div>
-        <div class="col-6 pl-2">
-          <q-card flat class="rounded-lg bg-grey-3 pa-2 row">
-            <q-card
               class="pa-3 rounded-lg bg-deep-orange mr-3"
               style="width: max-content"
             >
@@ -41,6 +27,20 @@
                 name="mdi-checkbox-blank-circle-outline"
                 color="white"
               ></q-icon>
+            </q-card>
+            <div class="flexy">
+              <p class="q-mb-none text-weight-bold">{{ store.count.open }}</p>
+              <p class="q-mb-none small_txt text-weight-medium">Open Issue</p>
+            </div>
+          </q-card>
+        </div>
+        <div class="col-6 pl-2">
+          <q-card flat class="rounded-lg bg-grey-3 pa-2 row">
+            <q-card
+              class="pa-3 rounded-lg bg-deep-purple-9 mr-3"
+              style="width: max-content"
+            >
+              <q-icon name="mdi-check-circle-outline" color="white"></q-icon>
             </q-card>
             <div class="flexy">
               <p class="q-mb-none text-weight-bold">{{ store.count.close }}</p>
