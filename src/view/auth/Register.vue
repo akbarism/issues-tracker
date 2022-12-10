@@ -28,7 +28,7 @@
               class="rounded-lg"
             />
           </div>
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <p class="q-mb-none text-weight-medium">password</p>
             <q-input
               outlined
@@ -37,7 +37,7 @@
               color="orange"
               class="rounded-lg"
             />
-          </div>
+          </div> -->
           <div class="mb-3">
             <p class="q-mb-none text-weight-medium">role</p>
             <div class="row">
@@ -110,7 +110,7 @@ const regis = () => {
   loading.value = true;
   const auth = getAuth();
   let email = `${form.email}@gmail.com`;
-  createUserWithEmailAndPassword(auth, email, form.password)
+  createUserWithEmailAndPassword(auth, email, "Tes123tes@")
     .then((userCredential) => {
       const user = userCredential.user;
       console.log(user.uid);
