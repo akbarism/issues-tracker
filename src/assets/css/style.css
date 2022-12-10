@@ -31,10 +31,18 @@
 
 }
 
+.response_dialog {
+    min-width: 450px;
+}
+
 @media (max-width: 480px) {
     .break_point {
         width: 100%;
         padding: 10px;
+    }
+
+    .response_dialog {
+        width: 99%;
     }
 }
 
