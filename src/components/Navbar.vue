@@ -34,6 +34,14 @@
               <q-item-section>Developer Mode</q-item-section>
             </q-item>
             <q-separator />
+            <q-item
+              clickable
+              v-if="route.path != '/'"
+              v-close-popup
+              @click="toHome()"
+            >
+              <q-item-section>Home</q-item-section>
+            </q-item>
             <q-item clickable @click="logout" v-close-popup v-if="store.user">
               <q-item-section>Logout</q-item-section>
             </q-item>
@@ -64,11 +72,19 @@ import { mainStore } from "../store/pinia";
 import ava from "../assets/img/ava1.png";
 import { getAuth, signOut } from "firebase/auth";
 import { reactive } from "@vue/reactivity";
+import { useRoute, useRouter } from "vue-router";
 const store = mainStore();
 const auth = getAuth();
+const route = useRoute();
+const router = useRouter();
 const vm = reactive({
   dialog: false,
 });
+console.log(route.path);
+const toHome = () => {
+  router.push("/");
+};
+
 const logout = async () => {
   await signOut(auth);
   store.checkAuth();
