@@ -2,7 +2,7 @@
   <div class="row justify-center">
     <div class="break_point">
       <Navbar />
-      <div class="row">
+      <div class="row mb-2">
         <div v-for="(item, i) in tabs" :key="`tab-${i}`">
           <q-btn
             @click="changeTab(item)"
