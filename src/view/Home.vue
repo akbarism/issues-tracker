@@ -9,7 +9,7 @@
           <p class="text-weight-bold ml-1 q-mb-none">Open Issue</p>
         </div>
 
-        <router-link to="/all-issue">
+        <router-link to="/all-issue" >
           <q-btn
             flat
             size="sm"

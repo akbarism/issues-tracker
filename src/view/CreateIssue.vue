@@ -113,6 +113,7 @@ const createData = async () => {
     status: "open",
     day: day().format("DD"),
     month: day().format("MM-YYYYY"),
+    reopen: null,
   });
 
   for (let i in form) {

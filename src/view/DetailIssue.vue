@@ -209,10 +209,10 @@ const fetchData = async (load) => {
   if (load) {
     vm.loading = true;
   }
-  const res = await getDoc(queryDetail);
-  vm.issue = res.data();
-  vm.issue["isOpen"] = vm.issue.status == "open" ? true : false;
-  vm.loading = false;
+  onSnapshot(queryDetail, (doc) => {
+    vm.issue = doc.data();
+    vm.loading = false;
+  });
 };
 
 const swtichStatus = async (state) => {
@@ -227,7 +227,6 @@ const swtichStatus = async (state) => {
       catatan: "",
     };
     sendLog(msg);
-    fetchData(false);
   } else {
     vm.reopen = true;
   }
@@ -263,7 +262,6 @@ const sendLog = async (msg) => {
     createdAt: day().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
   });
   vm.sending = false;
-  getLog();
 };
 
 const validateCreate = () => {
