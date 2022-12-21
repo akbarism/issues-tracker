@@ -14,6 +14,7 @@ import { globalcomponent } from "./plugins/globalcomponent.js";
 import "quasar/src/css/index.sass";
 import router from "./router";
 // import db from "./plugins/firebase";
+import VueSocialSharing from "vue-social-sharing";
 import App from "./App.vue";
 const myApp = createApp(App);
 myApp.use(createPinia());
@@ -23,6 +24,7 @@ myApp
   .use(Quasar, {
     plugins: { Notify }, // import Quasar plugins and add here
   })
+  .use(VueSocialSharing)
   .use(router);
 
 // Assumes you have a <div id="app"></div> in your index.html

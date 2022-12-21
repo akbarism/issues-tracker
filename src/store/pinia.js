@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import axios from "axios";
 import {
   collection,
   setDoc,
@@ -61,6 +62,29 @@ export const mainStore = defineStore("main", {
         data.push(el.data());
       });
       this.issue = data;
+    },
+
+    getApi(path) {
+      return new Promise((resolve, reject) => {
+        const config = {
+          headers: {
+            Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvZGV2LW9ubGluZXRlc3QuZ2FtaWZpbmRvLmNvbVwvYXBpXC9hZG1pblwvbG9naW4iLCJpYXQiOjE2NzE1OTMzOTEsImV4cCI6MTcwMzEyOTM5MSwibmJmIjoxNjcxNTkzMzkxLCJqdGkiOiJoYXdYb1pYNWllVE53R3FLIiwic3ViIjoxMSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.1uf4fYsFQzGe3j-xMTIhWzaHw_iDOHlgSucJ_q8vplE`,
+          },
+        };
+        this.isErr = false;
+        axios
+          .get(`https://dev-onlinetest.gamifindo.com/api/${path}`, config)
+          .then((res) => {
+            resolve(res.data ?? res);
+          })
+          .catch((err) => {
+            if (err.response.data) {
+              reject(err.response.data);
+            } else {
+              reject(err);
+            }
+          });
+      });
     },
   },
 });

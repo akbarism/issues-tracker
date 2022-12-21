@@ -1,7 +1,6 @@
 <template>
-  <div class="row justify-center">
+  <div class="row justify-center relative-position">
     <div class="break_point q-py-md">
-      <Navbar />
       <div class="row items-center justify-between mb-3">
         <q-btn
           unelevated
@@ -35,49 +34,89 @@
             <p class="text-weight-bold q-mb-none" style="font-size: 18px">
               {{ vm.issue.title }}
             </p>
-            <div class="row items-center justify-end">
-              <span class="text-grey text-weight-regular mr-2"
-                >#{{ vm.issue.id }}</span
+            <div class="row items-center justify-between">
+              <q-btn
+                :color="
+                  vm.issue.status == 'open' ? 'deep-orange' : 'deep-purple-9'
+                "
+                class="text-capitalize px-2"
+                unelevated
+                size="sm"
+                rounded
+                style="height: max-content"
               >
+                <div class="row no-wrap">
+                  <q-icon
+                    class="mr-1"
+                    :name="`mdi-${
+                      vm.issue.status == 'open'
+                        ? 'checkbox-blank-circle-outline'
+                        : 'check-circle-outline'
+                    }`"
+                  ></q-icon>
+                  {{ vm.issue.status }}
+                </div>
+              </q-btn>
               <q-btn
                 round
                 unelevated
                 flat
-                size="sm"
-                color="primary"
-                icon="mdi-content-copy"
+                color="green"
+                icon="mdi-whatsapp"
+                @click="onForward"
               />
             </div>
-            <q-btn
-              :color="
-                vm.issue.status == 'open' ? 'deep-orange' : 'deep-purple-9'
-              "
-              class="text-capitalize px-2"
-              unelevated
-              size="sm"
-              rounded
-              style="height: max-content"
-            >
-              <div class="row no-wrap">
-                <q-icon
-                  class="mr-1"
-                  :name="`mdi-${
-                    vm.issue.status == 'open'
-                      ? 'checkbox-blank-circle-outline'
-                      : 'check-circle-outline'
-                  }`"
-                ></q-icon>
-                {{ vm.issue.status }}
-              </div>
-            </q-btn>
+
             <p class="xsmall_txt text-grey q-mb-none">
               <span class="text-weight-bold">{{ vm.issue.by }}</span> created
               this issue {{ day(vm.issue.createdAt).fromNow() }}
             </p>
           </div>
+          <q-separator class="mb-2" />
+          <q-card class="pa-2 rounded-lg mb-2" flat bordered>
+            <div class="row justify-between">
+              <p class="text-weight-bold q-mb-none">
+                {{ vm.issue.project }}
+              </p>
+              <p v-if="vm.issue.reopen">
+                dibuka
+                <span class="text-weight-bold">{{ vm.issue.reopen }}x</span>
+              </p>
+            </div>
+            <p class="q-mb-none" v-if="vm.issue.layanan">
+              <span class="text-caption">Layanan : </span>
+              <span class="text-weight-bold">{{ vm.issue.layanan }}</span>
+            </p>
+            <p class="q-mb-none">
+              <span class="text-caption">Kendala : </span>
+              <span class="text-weight-bold">{{ vm.issue.kendala }}</span>
+            </p>
+          </q-card>
           <q-card class="rounded-lg" flat bordered style="position: relative">
             <q-card-section>
               <p v-html="vm.issue.deskripsi"></p>
+              <q-separator />
+              <q-btn
+                v-if="!vm.issue.img"
+                unelevated
+                color="primary"
+                label="Upload Foto"
+                icon="mdi-camera"
+                size="sm"
+                class="mt-3"
+                @click="$refs.file.click()"
+              >
+                <input
+                  type="file"
+                  ref="file"
+                  @change="onUpload($event)"
+                  accept="image/*"
+                  class="input_hide"
+                />
+              </q-btn>
+              <div v-else class="row justify-center">
+                <img :src="vm.issue.img" alt="anu" class="evidence-img" />
+              </div>
             </q-card-section>
           </q-card>
           <div class="connector_outer">
@@ -153,7 +192,7 @@
             :id="id"
             @close="vm.reopen = false"
             @fetchLog="getLog()"
-            @refetch="fetchData(false)"
+            @refetch="manageReopen"
           />
         </q-dialog>
         <q-dialog v-model="vm.login">
@@ -163,13 +202,30 @@
             @redirect="router.push('/create')"
           />
         </q-dialog>
+        <q-dialog v-model="vm.forward">
+          <forwardToWa
+            :dialog="vm.forward"
+            :id="id"
+            @close="vm.forward = false"
+            :pocket="vm.pocket"
+          />
+        </q-dialog>
       </div>
+    </div>
+    <div class="overlays" v-if="vm.uploading">
+      <h5 style="font-weight: 600">uploading...</h5>
     </div>
   </div>
 </template>
 
 <script setup>
 import { reactive, ref } from "@vue/reactivity";
+import {
+  getStorage,
+  ref as fbRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 import { inject, onMounted } from "@vue/runtime-core";
 import ProgressIssue from "./ProgressIssue.vue";
 import ResponedIssue from "./ResponedIssue.vue";
@@ -189,6 +245,7 @@ import day from "../plugins/Dayjs";
 import { useRoute, useRouter } from "vue-router";
 import { mainStore } from "../store/pinia";
 import ReopenIssue from "./reopenIssue.vue";
+import forwardToWa from "./forwardToWa.vue";
 const store = mainStore();
 const router = useRouter();
 const route = useRoute();
@@ -202,6 +259,10 @@ const vm = reactive({
   reopen: false,
   issue: null,
   log: [],
+  file: null,
+  uploading: false,
+  forward: false,
+  pocket: null,
 });
 
 const queryDetail = doc(db, "issue", id.value);
@@ -214,6 +275,15 @@ const fetchData = async (load) => {
     vm.issue = doc.data();
     vm.loading = false;
   });
+};
+
+const manageReopen = async () => {
+  let count = vm.issue.reopen ?? 0;
+  count++;
+  await updateDoc(queryDetail, {
+    reopen: count,
+  });
+  fetchData(false);
 };
 
 const swtichStatus = async (state) => {
@@ -273,10 +343,59 @@ const validateCreate = () => {
   }
 };
 
+const onUpload = (e) => {
+  vm.uploading = true;
+  const { files } = e.target;
+  vm.file = files[0];
+  const storage = getStorage();
+  const storageRef = fbRef(storage, `evidence/${day().unix()}-${vm.file.name}`);
+
+  uploadBytes(storageRef, vm.file).then((snapshot) => {
+    getDownloadURL(storageRef).then((path) => {
+      addEvidence(path);
+    });
+  });
+};
+
+const addEvidence = async (path) => {
+  await updateDoc(queryDetail, {
+    img: path,
+  });
+  vm.uploading = false;
+};
+const onForward = () => {
+  let item = Object.assign({}, vm.issue);
+  let catatan = `Project : ${item.project}\nLayanan : ${item.layanan}\nKendala : ${item.kendala}\n`;
+  vm.pocket = {
+    catatan: catatan,
+    title: item.title,
+  };
+  vm.forward = true;
+};
+
 onMounted(() => {
   fetchData(true);
   getLog(true);
 });
 </script>
 
-<style></style>
+<style>
+.input_hide {
+  display: none;
+}
+.overlays {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.328);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.evidence-img {
+  height: 300px;
+}
+</style>

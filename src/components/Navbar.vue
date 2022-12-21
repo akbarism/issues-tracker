@@ -30,6 +30,7 @@
               clickable
               v-close-popup
               v-if="store.user && store.user.role == 1"
+              @click="$emit('devOn')"
             >
               <q-item-section>Developer Mode</q-item-section>
             </q-item>
@@ -80,7 +81,6 @@ const router = useRouter();
 const vm = reactive({
   dialog: false,
 });
-console.log(route.path);
 const toHome = () => {
   router.push("/");
 };

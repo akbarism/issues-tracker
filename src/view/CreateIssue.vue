@@ -1,6 +1,6 @@
 <template>
-  <div class="row justify-center">
-    <div class="break_point q-py-md">
+  <div>
+    <div class="q-py-md" v-if="store.uid">
       <div class="row justify-between align-center mb-3">
         <q-btn
           unelevated
@@ -38,6 +38,62 @@
               dense
             />
           </div>
+          <div v-if="form.project == 'Teman Bakat'">
+            <div class="mb-3 row">
+              <div
+                v-for="(item, i) in listLayanan"
+                :key="`listLayanan-${i}`"
+                class="px-3 py-2 mx-1 rounded max-content text-weight-medium cursor_pointer"
+                @click="
+                  form.tipe_layanan = item;
+                  form.layanan = '';
+                "
+                :style="`background: ${
+                  form.tipe_layanan == item ? '#2196f3' : '#fafafa'
+                }; color: ${form.tipe_layanan == item ? '#fff' : '#000'}`"
+              >
+                {{ item }}
+              </div>
+            </div>
+            <div
+              class="mb-3"
+              v-if="form.tipe_layanan == 'Psikotes'"
+              style="width: 60%"
+            >
+              <p class="q-mb-none text-weight-medium">List Psikotes</p>
+              <q-select
+                outlined
+                v-model="form.layanan"
+                :options="vm.psikotes"
+                color="orange"
+                dense
+              />
+            </div>
+            <div
+              class="mb-3"
+              v-if="form.tipe_layanan == 'Konsultasi'"
+              style="width: 60%"
+            >
+              <p class="q-mb-none text-weight-medium">List Konsultasi</p>
+              <q-select
+                outlined
+                v-model="form.layanan"
+                :options="vm.konsultasi"
+                color="orange"
+                dense
+              />
+            </div>
+          </div>
+          <div class="mb-3" v-if="form.project" style="width: 60%">
+            <p class="q-mb-none text-weight-medium">Kendala</p>
+            <q-select
+              outlined
+              v-model="form.kendala"
+              :options="vm.kendala"
+              color="orange"
+              dense
+            />
+          </div>
           <div class="mb-3">
             <p class="q-mb-none text-weight-medium">Description</p>
             <q-editor v-model="form.deskripsi" min-height="5rem" />
@@ -55,6 +111,9 @@
         </q-card-section>
       </q-card>
     </div>
+    <div class="row justify-center" v-else>
+      <Login />
+    </div>
   </div>
 </template>
 
@@ -69,14 +128,21 @@ import { mainStore } from "../store/pinia";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const store = mainStore();
+const listLayanan = ["Psikotes", "Konsultasi", "Lainya"];
 const vm = reactive({
   loading: false,
   issues: [],
+  psikotes: [],
+  konsultasi: [],
+  kendala: ["Report", "Force Close", "Notifikasi", "Login", "Lainya"],
 });
 const form = reactive({
   title: "",
   project: "",
   deskripsi: "",
+  tipe_layanan: "",
+  layanan: "",
+  kendala: "",
 });
 const fetchData = async () => {
   vm.loading = true;
@@ -85,6 +151,21 @@ const fetchData = async () => {
     vm.issues.push({ ...el.data(), id: el.id });
   });
   vm.loading = false;
+};
+
+const getPsikotes = () => {
+  store
+    .getApi("admin/psikotes-setting")
+    .then((res) =>
+      res.data.data.forEach((el) => vm.psikotes.push(el.nama_psikotes)),
+    );
+};
+const getKonsultasi = () => {
+  store
+    .getApi("admin/konsultasi")
+    .then((res) =>
+      res.data.data.forEach((el) => vm.konsultasi.push(el.nama_konsultasi)),
+    );
 };
 
 const project = ref([]);
@@ -114,6 +195,9 @@ const createData = async () => {
     day: day().format("DD"),
     month: day().format("MM-YYYYY"),
     reopen: null,
+    tipe_layanan: form.tipe_layanan,
+    layanan: form.layanan,
+    kendala: form.kendala,
   });
 
   for (let i in form) {
@@ -124,9 +208,15 @@ const createData = async () => {
 };
 
 onMounted(() => {
+  getPsikotes();
   fetchData();
   fetchProjcect();
+  getKonsultasi();
 });
 </script>
 
-<style></style>
+<style scoped>
+.cursor_pointer {
+  cursor: pointer;
+}
+</style>

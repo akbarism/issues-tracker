@@ -9,7 +9,7 @@
         {{ day(item.created_at).format("DD MMMM YYYY") }}
       </p>
     </div>
-    <div class="column items-end">
+    <div class="column items-end justify-between">
       <q-btn
         :color="item.status == 'open' ? 'deep-orange' : 'deep-purple-9'"
         class="text-capitalize px-2"
@@ -30,6 +30,10 @@
           {{ item.status }}
         </div>
       </q-btn>
+      <div class="text-weight-medium text-caption" v-if="item.reopen">
+        <q-icon name="mdi-folder-open" size="18px" color="red"></q-icon>
+        {{ item.reopen }}x
+      </div>
     </div>
   </q-card-section>
 </template>
@@ -44,6 +48,8 @@ const toDetail = (id) => {
 defineProps({
   item: null,
 });
+
+
 </script>
 
 <style scoped>
