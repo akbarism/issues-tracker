@@ -146,9 +146,9 @@
 <script setup>
 import { reactive, ref } from "@vue/reactivity";
 import { mainStore } from "../store/pinia";
+import db from "../plugins/firebase";
 import { collection, orderBy, query, where, getDocs } from "firebase/firestore";
 import { onMounted } from "@vue/runtime-core";
-import db from "../plugins/firebase";
 import ItemIssue from "../components/ItemIssue.vue";
 
 const store = mainStore();

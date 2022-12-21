@@ -50,12 +50,12 @@ const menu = [
   },
   {
     title: "Kendala",
-    path: "/list-kendala",
+    path: "/daftar-kendala",
     icon: "emoji_nature",
   },
   {
     title: "Response",
-    path: "/responses",
+    path: "/responses-type",
     icon: "campaign",
   },
 ];

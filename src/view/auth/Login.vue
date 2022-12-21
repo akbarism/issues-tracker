@@ -6,7 +6,7 @@
     style="position: relative; width: 350px"
   >
     <q-card-section>
-      <div class="text-h6">Tell me who you are</div>
+      <div class="text-h6">Masukan username</div>
     </q-card-section>
     <Backdrop v-if="loading" />
     <q-card-section>
@@ -72,9 +72,9 @@ const login = () => {
       store.checkAuth();
     })
     .catch((error) => {
-      const errorCode = error.code;
       const errorMessage = error.message;
       notify({ msg: errorMessage, type: "negative" });
+      loading.value = false;
     });
 };
 </script>

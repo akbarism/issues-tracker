@@ -30,6 +30,27 @@ const routes = [
         name: "AllIssue",
         component: () => import("./view/AllIssue.vue"),
       },
+      // dev router
+      {
+        path: "/users",
+        name: "listUser",
+        component: () => import("./view/developer/listUser.vue"),
+      },
+      {
+        path: "/Projects",
+        name: "listProject",
+        component: () => import("./view/developer/listProject.vue"),
+      },
+      {
+        path: "/daftar-kendala",
+        name: "kendala",
+        component: () => import("./view/developer/listKendala.vue"),
+      },
+      {
+        path: "/responses-type",
+        name: "responses-type",
+        component: () => import("./view/developer/typeResponse.vue"),
+      },
     ],
   },
 ];
