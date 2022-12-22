@@ -4,12 +4,12 @@
       <div class="text-h6">Give a reponse</div>
     </q-card-section>
     <q-card-section class="q-pt-none">
-      <div class="mb-3">
+      <div class="mb-3" v-if="vm.listAct.length">
         <p class="q-mb-none text-weight-medium">Pilih tindakan</p>
         <q-select
           outlined
           v-model="form.type"
-          :options="listAct"
+          :options="vm.listAct"
           color="orange"
           dense
         />
@@ -35,8 +35,8 @@
 </template>
 
 <script setup>
-import { setDoc, doc } from "@firebase/firestore";
-import { reactive } from "@vue/reactivity";
+import { setDoc, doc, getDocs, collection } from "@firebase/firestore";
+import { reactive, onMounted } from "vue";
 import Backdrop from "../components/Backdrop.vue";
 import day from "../plugins/Dayjs";
 import db from "../plugins/firebase";
@@ -48,6 +48,7 @@ const props = defineProps({
 });
 const vm = reactive({
   sending: false,
+  listAct: [],
 });
 const emit = defineEmits(["close", "fetchLog"]);
 
@@ -68,6 +69,13 @@ const listAct = [
     icon: "mdi-auto-fix",
   },
 ];
+
+const fetchData = async () => {
+  const res = await getDocs(collection(db, "response-type"));
+  let arr = [];
+  res.forEach((el) => arr.push(el.data()));
+  vm.listAct = arr;
+};
 const form = reactive({
   type: "",
   catatan: "",
@@ -90,6 +98,10 @@ const sendLog = async (msg) => {
   emit("close");
   vm.sending = false;
 };
+
+onMounted(() => {
+  fetchData();
+});
 </script>
 
 <style></style>

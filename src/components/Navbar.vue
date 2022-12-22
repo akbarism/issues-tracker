@@ -1,16 +1,15 @@
 <template>
   <div class="py-3 row justify-between items-center">
-    <div class="row items-center">
-      <q-avatar>
-        <img :src="ava" />
-      </q-avatar>
-      <div v-if="store">
-        <p
-          class="small_txt text-weight-medium q-mb-none ml-2"
-          v-if="store.user"
-        >
-          {{ store.user.name }}
-        </p>
+    <div v-if="store">
+      <div class="row items-center" v-if="store.user">
+        <q-avatar>
+          <img :src="store.user.ava ? store.user.ava : ava" />
+        </q-avatar>
+        <div>
+          <p class="small_txt text-weight-medium q-mb-none ml-2">
+            {{ store.user.name }}
+          </p>
+        </div>
       </div>
     </div>
     <div v-if="store">

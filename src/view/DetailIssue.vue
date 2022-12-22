@@ -26,6 +26,25 @@
             size="sm"
             @click="validateCreate"
           />
+          <div v-if="store.user && store.user.role == 1">
+            <q-btn
+              v-if="!vm.deleting"
+              unelevated
+              class="text-capitalize ml-3"
+              label="löschen"
+              color="red"
+              size="sm"
+              @click="delIssue"
+            />
+            <q-btn
+              v-else
+              unelevated
+              class="text-capitalize ml-3"
+              label="Daten löschen..."
+              color="red"
+              size="sm"
+            />
+          </div>
         </div>
       </div>
       <div v-if="!vm.loading">
@@ -97,7 +116,7 @@
               <p v-html="vm.issue.deskripsi"></p>
               <q-separator />
               <q-btn
-                v-if="!vm.issue.img"
+                v-if="!vm.issue.img && store.uid"
                 unelevated
                 color="primary"
                 label="Upload Foto"
@@ -114,8 +133,33 @@
                   class="input_hide"
                 />
               </q-btn>
-              <div v-else class="row justify-center">
-                <img :src="vm.issue.img" alt="anu" class="evidence-img" />
+              <div v-else>
+                <div class="row justify-center">
+                  <img :src="vm.issue.img" alt="anu" class="evidence-img" />
+                </div>
+                <div v-if="store.user">
+                  <q-btn
+                    v-if="!vm.delImg"
+                    unelevated
+                    color="red"
+                    label="Delete Foto"
+                    icon="mdi-delete"
+                    size="sm"
+                    class="mt-1"
+                    @click="deleteImg(vm.issue.img)"
+                  >
+                  </q-btn>
+                  <q-btn
+                    v-else
+                    unelevated
+                    color="red"
+                    label="Deleting..."
+                    icon="mdi-delete"
+                    size="sm"
+                    class="mt-1"
+                  >
+                  </q-btn>
+                </div>
               </div>
             </q-card-section>
           </q-card>
@@ -225,6 +269,7 @@ import {
   ref as fbRef,
   uploadBytes,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
 import { inject, onMounted } from "@vue/runtime-core";
 import ProgressIssue from "./ProgressIssue.vue";
@@ -239,6 +284,7 @@ import {
   query,
   orderBy,
   onSnapshot,
+  deleteDoc,
 } from "firebase/firestore";
 import db from "../plugins/firebase.js";
 import day from "../plugins/Dayjs";
@@ -254,6 +300,7 @@ const vm = reactive({
   loading: false,
   waiting: false,
   sending: false,
+  deleting: false,
   dialog: false,
   login: false,
   reopen: false,
@@ -263,6 +310,7 @@ const vm = reactive({
   uploading: false,
   forward: false,
   pocket: null,
+  delImg: false,
 });
 
 const queryDetail = doc(db, "issue", id.value);
@@ -363,6 +411,28 @@ const addEvidence = async (path) => {
   });
   vm.uploading = false;
 };
+
+const deleteImg = (path) => {
+  const storage = getStorage();
+  const desertRef = fbRef(storage, path);
+  vm.delImg = true;
+  deleteObject(desertRef)
+    .then(() => {
+      removeEvidence();
+    })
+    .catch((error) => {
+      vm.delImg = false;
+      console.log(error);
+    });
+};
+
+const removeEvidence = async () => {
+  await updateDoc(queryDetail, {
+    img: "",
+  });
+  vm.delImg = false;
+};
+
 const onForward = () => {
   let item = Object.assign({}, vm.issue);
   let catatan = `Project : ${item.project}\nLayanan : ${item.layanan}\nKendala : ${item.kendala}\n`;
@@ -373,6 +443,11 @@ const onForward = () => {
   vm.forward = true;
 };
 
+const delIssue = async () => {
+  vm.deleting = true;
+  await deleteDoc(doc(db, "issue", id.value));
+  router.push("/");
+};
 onMounted(() => {
   fetchData(true);
   getLog(true);

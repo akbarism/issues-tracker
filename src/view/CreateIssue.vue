@@ -126,6 +126,7 @@ import Backdrop from "../components/Backdrop.vue";
 import day from "../plugins/Dayjs";
 import { mainStore } from "../store/pinia";
 import { useRouter } from "vue-router";
+import axios from "axios";
 const router = useRouter();
 const store = mainStore();
 const listLayanan = ["Psikotes", "Konsultasi", "Lainya"];
@@ -134,7 +135,7 @@ const vm = reactive({
   issues: [],
   psikotes: [],
   konsultasi: [],
-  kendala: ["Report", "Force Close", "Notifikasi", "Login", "Lainya"],
+  kendala: [],
 });
 const form = reactive({
   title: "",
@@ -167,7 +168,12 @@ const getKonsultasi = () => {
       res.data.data.forEach((el) => vm.konsultasi.push(el.nama_konsultasi)),
     );
 };
-
+const kendala = async () => {
+  const res = await getDocs(collection(db, "kendala"));
+  let arr = [];
+  res.forEach((el) => arr.push(el.data().name));
+  vm.kendala = arr;
+};
 const project = ref([]);
 const fetchProjcect = async () => {
   const res = await getDocs(collection(db, "project"));
@@ -199,6 +205,7 @@ const createData = async () => {
     layanan: form.layanan,
     kendala: form.kendala,
   });
+  forwardToDiscord(id);
 
   for (let i in form) {
     form[i] = "";
@@ -207,11 +214,19 @@ const createData = async () => {
   router.push(`/issue/${id}`);
 };
 
+const forwardToDiscord = (id) => {
+  let body = {
+    message: `Sial! si ${store.user.name} bikin issue gays!. \n nih linknya : https://tracking-issue.netlify.app/issue/${id} \n @everyone`,
+  };
+  axios.post("https://simple-discord-bot-jade.vercel.app/message", body);
+};
+
 onMounted(() => {
   getPsikotes();
   fetchData();
   fetchProjcect();
   getKonsultasi();
+  kendala();
 });
 </script>
 

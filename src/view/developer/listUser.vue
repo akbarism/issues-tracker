@@ -43,7 +43,13 @@
             </div>
           </div>
           <div>
-            <q-btn flat round color="primary" icon="edit" />
+            <q-btn
+              flat
+              round
+              color="primary"
+              icon="edit"
+              @click="setUpdate(item)"
+            />
           </div>
         </q-card>
       </div>
@@ -57,15 +63,73 @@
         type="QSlider"
       />
     </div>
+    <div class="py-2">
+      <q-dialog v-model="vm.dialog">
+        <q-card
+          class="rounded-lg pa-5"
+          flat
+          bordered
+          style="position: relative; width: 400px"
+        >
+          <Backdrop v-if="vm.loading" />
+          <p class="q-mb-none">Nama</p>
+          <q-input
+            outlined
+            dense
+            v-model="vm.item.name"
+            color="orange"
+            class="rounded-lg mb-3"
+          />
+
+          <div class="row justify-center">
+            <div
+              v-for="(item, i) in vm.avatars"
+              :key="`ava-${i}`"
+              class="ma-2 cursor-pointer"
+              @click="vm.item.ava = item.ava"
+            >
+              <img
+                :src="item.ava"
+                :class="`${vm.item.ava == item.ava ? 'bordered' : ''} avatars`"
+                alt="ava"
+              />
+            </div>
+          </div>
+
+          <div class="row justify-end mt-3">
+            <q-btn
+              @click="updateData"
+              unelevated
+              class="text-capitalize"
+              label="Submit"
+              color="blue"
+              size="sm"
+            />
+          </div>
+        </q-card>
+      </q-dialog>
+    </div>
   </div>
 </template>
 <script setup>
 import db from "../../plugins/firebase.js";
-import { collection, orderBy, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  orderBy,
+  query,
+  where,
+  getDocs,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { reactive, onMounted } from "vue";
+import Backdrop from "../../components/Backdrop.vue";
 const vm = reactive({
   data: [],
   loading: false,
+  item: null,
+  dialog: false,
+  avatars: [],
 });
 const fetchData = async () => {
   vm.loading = true;
@@ -75,8 +139,38 @@ const fetchData = async () => {
   vm.data = arr;
   vm.loading = false;
 };
+const setUpdate = (item) => {
+  vm.item = Object.assign({}, item);
+  vm.dialog = true;
+};
+const getAva = async () => {
+  const res = await getDocs(collection(db, "avatar"));
+  res.forEach((el) => vm.avatars.push(el.data()));
+};
 
+const updateData = async () => {
+  vm.loading = true;
+  await updateDoc(doc(db, "user", vm.item.id), {
+    name: vm.item.name,
+    ava: vm.item.ava,
+  });
+  vm.dialog = false;
+  fetchData();
+};
 onMounted(() => {
   fetchData();
+  getAva();
 });
 </script>
+
+<style scoped>
+.avatars {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.bordered {
+  border: 2px solid #2196f3;
+}
+</style>
