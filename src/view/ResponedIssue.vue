@@ -71,10 +71,12 @@ const listAct = [
 ];
 
 const fetchData = async () => {
+  vm.sending = true;
   const res = await getDocs(collection(db, "response-type"));
   let arr = [];
   res.forEach((el) => arr.push(el.data()));
   vm.listAct = arr;
+  vm.sending = false;
 };
 const form = reactive({
   type: "",
