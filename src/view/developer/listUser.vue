@@ -48,6 +48,7 @@
               round
               color="primary"
               icon="edit"
+              size="sm"
               @click="setUpdate(item)"
             />
           </div>
