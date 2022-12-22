@@ -216,9 +216,9 @@ const createData = async () => {
 
 const forwardToDiscord = (id) => {
   let body = {
-    content: `Sial! si ${store.user.name} bikin issue gays!. \n nih linknya : https://tracking-issue.netlify.app/issue/${id} \n @everyone`,
+    content: `Sial! si ${store.user.name} bikin issue gays!. \n issue : ${form.title} \n project : ${form.project} \n nih linknya : https://tracking-issue.netlify.app/issue/${id} \n @everyone`,
   };
-  store.postDiscord(body)
+  store.postDiscord(body);
 };
 
 onMounted(() => {

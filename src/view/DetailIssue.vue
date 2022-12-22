@@ -331,9 +331,18 @@ const manageReopen = async () => {
   await updateDoc(queryDetail, {
     reopen: count,
   });
+
   fetchData(false);
+  forwardToDiscord();
 };
 
+const forwardToDiscord = () => {
+  let txt = `Luka lama terbuka kembali... si ${store.user.name} nge-reopen issue guys!, \n issue : ${vm.issue.title} \n project : ${vm.issue.project} \n nih linknya : https://tracking-issue.netlify.app/issue/${id.value} \n @everyone`;
+  let body = {
+    content: txt,
+  };
+  store.postDiscord(body);
+};
 const swtichStatus = async (state) => {
   if (state == "open") {
     vm.sending = true;

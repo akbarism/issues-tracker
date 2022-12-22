@@ -66,6 +66,8 @@ const sendLog = async () => {
   emit("close");
   vm.sending = false;
 };
+
+
 </script>
 
 <style></style>
