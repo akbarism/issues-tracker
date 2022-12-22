@@ -216,9 +216,9 @@ const createData = async () => {
 
 const forwardToDiscord = (id) => {
   let body = {
-    message: `Sial! si ${store.user.name} bikin issue gays!. \n nih linknya : https://tracking-issue.netlify.app/issue/${id} \n @everyone`,
+    content: `Sial! si ${store.user.name} bikin issue gays!. \n nih linknya : https://tracking-issue.netlify.app/issue/${id} \n @everyone`,
   };
-  axios.post("https://simple-discord-bot-jade.vercel.app/message", body);
+  store.postDiscord(body)
 };
 
 onMounted(() => {

@@ -18,6 +18,8 @@ export const mainStore = defineStore("main", {
     uid: null,
     count: null,
     issue: [],
+    webhook:
+      "https://discordapp.com/api/webhooks/1055436509504884807/FXUBeQT4rN3XdQdrJ7dHiaoOA_c2hu00b0-V4bPPkwGzZt5eQpduGiZwfacSxPftjEXk",
   }),
 
   actions: {
@@ -62,6 +64,10 @@ export const mainStore = defineStore("main", {
         data.push(el.data());
       });
       this.issue = data;
+    },
+
+    postDiscord(body) {
+      axios.post(this.webhook, body);
     },
 
     getApi(path) {
