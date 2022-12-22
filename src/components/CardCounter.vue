@@ -18,35 +18,42 @@
       </div>
       <div class="row" v-if="store.count">
         <div class="col-6 pr-2">
-          <q-card flat class="rounded-lg bg-grey-3 pa-2 row">
-            <q-card
-              class="pa-3 rounded-lg bg-deep-orange mr-3"
-              style="width: max-content"
-            >
-              <q-icon
-                name="mdi-checkbox-blank-circle-outline"
-                color="white"
-              ></q-icon>
-            </q-card>
-            <div class="flexy">
-              <p class="q-mb-none text-weight-bold">{{ store.count.open }}</p>
-              <p class="q-mb-none small_txt text-weight-medium">Open Issue</p>
+          <div class="cards open px-5 py-3">
+            <div class="temp-text">
+              <div>
+                <p
+                  class="q-mb-none text-weight-bold text-right"
+                  style="font-size: 30px"
+                >
+                  {{ store.count.open }}
+                </p>
+                <p class="q-mb-none small_txt text-weight-medium">Open Issue</p>
+              </div>
             </div>
-          </q-card>
+            <div class="roll pos-1"></div>
+            <div class="roll pos-2"></div>
+            <div class="roll pos-3"></div>
+          </div>
         </div>
         <div class="col-6 pl-2">
-          <q-card flat class="rounded-lg bg-grey-3 pa-2 row">
-            <q-card
-              class="pa-3 rounded-lg bg-deep-purple-9 mr-3"
-              style="width: max-content"
-            >
-              <q-icon name="mdi-check-circle-outline" color="white"></q-icon>
-            </q-card>
-            <div class="flexy">
-              <p class="q-mb-none text-weight-bold">{{ store.count.close }}</p>
-              <p class="q-mb-none small_txt text-weight-medium">Closed Issue</p>
+          <div class="cards closed px-5 py-3">
+            <div class="temp-text">
+              <div>
+                <p
+                  class="q-mb-none text-weight-bold text-right"
+                  style="font-size: 30px"
+                >
+                  {{ store.count.close }}
+                </p>
+                <p class="q-mb-none small_txt text-weight-medium">
+                  Closed Issue
+                </p>
+              </div>
             </div>
-          </q-card>
+            <div class="roll pos-1"></div>
+            <div class="roll pos-2"></div>
+            <div class="roll pos-3"></div>
+          </div>
         </div>
       </div>
       <div class="row" v-else>
@@ -56,18 +63,6 @@
         <div class="col-6 pl-2">
           <q-skeleton height="60px" class="rounded-lg mb-3" type="QSlider" />
         </div>
-      </div>
-      <div class="row justify-end mt-1">
-        <q-btn
-          flat
-          size="sm"
-          color="primary"
-          unelevated
-          class="text-capitalize text-weight-large pa-0"
-          style="height: max-content; width: fit-content"
-        >
-          view statistic
-        </q-btn>
       </div>
     </q-card-section>
   </q-card>
@@ -84,4 +79,61 @@ onMounted(() => {
 });
 </script>
 
-<style></style>
+<style scoped>
+.cards {
+  position: relative;
+  overflow: hidden;
+  height: 100px;
+  width: 100%;
+  border-radius: 8px;
+  background: linear-gradient(
+    278.29deg,
+    #fbb2b4 30.05%,
+    rgba(255, 143, 178, 0) 133.19%
+  );
+}
+.open {
+  background: linear-gradient(
+    278.29deg,
+    #fbb2b4 30.05%,
+    rgba(255, 143, 178, 0) 133.19%
+  );
+}
+.closed {
+  background: linear-gradient(
+    278.29deg,
+    #ab84c8 30.05%,
+    rgba(241, 201, 236, 0) 133.19%
+  );
+}
+.roll {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background: #fff;
+  opacity: 0.2;
+  border-radius: 50%;
+  bottom: -20px;
+  left: -20px;
+}
+
+.pos-1 {
+  bottom: -20px;
+  left: -20px;
+}
+.pos-2 {
+  bottom: 0;
+  left: 10px;
+}
+.pos-3 {
+  bottom: 10px;
+  left: 40px;
+}
+.temp-text {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+</style>
