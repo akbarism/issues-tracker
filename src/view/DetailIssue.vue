@@ -444,7 +444,7 @@ const removeEvidence = async () => {
 
 const onForward = () => {
   let item = Object.assign({}, vm.issue);
-  let catatan = `\nProject : ${item.project}\nLayanan : ${item.layanan}\nKendala : ${item.kendala}\n`;
+  let catatan = `\nProject : ${item.project}\nLayanan : ${item.layanan}\nKendala : ${item.kendala}\nstatus : Open/Closed`;
   vm.pocket = {
     catatan: catatan,
     title: item.title,
