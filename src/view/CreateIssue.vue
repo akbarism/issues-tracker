@@ -206,7 +206,7 @@ const createData = async () => {
     kendala: form.kendala,
   });
   forwardToDiscord(id);
-
+  forwardToWa(id);
   for (let i in form) {
     form[i] = "";
   }
@@ -219,6 +219,16 @@ const forwardToDiscord = (id) => {
     content: `Sial! si ${store.user.name} bikin issue gays!. \n issue : ${form.title} \n project : ${form.project} \n nih linknya : https://tracking-issue.netlify.app/issue/${id} \n @everyone`,
   };
   store.postDiscord(body);
+};
+
+const forwardToWa = (id) => {
+  const author = `${store.user.name} membuat issue baru. \n`;
+  const info = `Project : ${item.project}\nLayanan : ${item.layanan}\nKendala : ${item.kendala}\nstatus : open \n`;
+  const link = `Check detailnya di https://tracking-issue.netlify.app/issue/${id}`;
+  let body = {
+    message: `${author} ${info} ${link}`,
+  };
+  store.postWa(body);
 };
 
 onMounted(() => {

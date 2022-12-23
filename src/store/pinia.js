@@ -69,6 +69,9 @@ export const mainStore = defineStore("main", {
     postDiscord(body) {
       axios.post(this.webhook, body);
     },
+    postWa(body) {
+      axios.post("https://simple-discord-bot-jade.vercel.app/msg", body);
+    },
 
     getApi(path) {
       return new Promise((resolve, reject) => {
