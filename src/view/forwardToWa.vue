@@ -11,7 +11,7 @@
     <q-card-actions align="right" v-if="pocket">
       <ShareNetwork
         network="WhatsApp"
-        :title="pocket?.title"
+        :title="`${pocket?.title}\n`"
         :url="`https://tracking-issue.netlify.app/issue/${id}`"
         :description="pocket.catatan"
         @open="$emit(close)"
