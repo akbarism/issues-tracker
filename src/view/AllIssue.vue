@@ -164,7 +164,7 @@ const vm = reactive({
   layanan: "",
   kendala: "",
 });
-const tipe_layanan = ["Psikotes", "Konsultasi", "Layanan"];
+const tipe_layanan = ["Psikotes", "Konsultasi", "Lainya"];
 const kendala = ["Report", "Force Close", "Notifikasi", "Login", "Lainya"];
 const project = ref([]);
 const changeTab = (item) => {
