@@ -1,5 +1,9 @@
 <template>
-    <div>
-        <h1>statistic page</h1>
-    </div>
+  <div>
+    <SummaryAll />
+  </div>
 </template>
+
+<script setup>
+import SummaryAll from "../components/statistic/summaryAll.vue";
+</script>

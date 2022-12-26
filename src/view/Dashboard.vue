@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CardCounter @create="validateCreate" />
+    <CardCounter @create="validateCreate" :status_bot="vm.wa_bot" />
     <div class="row justify-between">
       <div class="row items-center mb-3">
         <q-icon size="sm" name="mdi-source-pull"></q-icon>
@@ -76,6 +76,7 @@ const vm = reactive({
   issue: [],
   loading: true,
   dialog: false,
+  wa_bot: null,
 });
 const store = mainStore();
 const router = useRouter();
@@ -103,8 +104,15 @@ const fetchData = async () => {
   vm.issue = data;
   vm.loading = false;
 };
-
+const getDevice = () => {
+  store.getInfoDevice().then((res) => {
+    console.log(res.data);
+    let bot = res.data;
+    vm.wa_bot = bot.status == "connected" ? bot.status : null;
+  });
+};
 onMounted(() => {
+  getDevice();
   fetchData();
 });
 </script>

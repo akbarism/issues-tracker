@@ -64,6 +64,12 @@
           <q-skeleton height="60px" class="rounded-lg mb-3" type="QSlider" />
         </div>
       </div>
+      <div class="pt-3">
+        Status Bot Whatsapp :
+        <span class="text-weight-bold">{{
+          status_bot ? "Online" : "Offline"
+        }}</span>
+      </div>
     </q-card-section>
   </q-card>
 </template>
@@ -73,6 +79,9 @@ import { onMounted } from "@vue/runtime-core";
 import { mainStore } from "../store/pinia";
 const store = mainStore();
 const emit = defineEmits(["create"]);
+const props = defineProps({
+  status_bot: null,
+});
 
 onMounted(() => {
   store.counterIssue();

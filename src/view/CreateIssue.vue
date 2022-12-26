@@ -199,7 +199,7 @@ const createData = async () => {
     createdAt: day().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss"),
     status: "open",
     day: day().format("DD"),
-    month: day().format("MM-YYYYY"),
+    month: day().format("MM-YYYY"),
     reopen: null,
     tipe_layanan: form.tipe_layanan,
     layanan: form.layanan,
@@ -222,11 +222,11 @@ const forwardToDiscord = (id) => {
 };
 
 const forwardToWa = (id) => {
-  const author = `${store.user.name} membuat issue baru. \n`;
-  const info = `Project : ${item.project}\nLayanan : ${item.layanan}\nKendala : ${item.kendala}\nstatus : open \n`;
+  const author = `${store.user.name} membuat issue baru! \n \n`;
+  const info = `Project : ${form.project}\nLayanan : ${form.layanan}\nKendala : ${form.kendala}\nstatus : open \n\n`;
   const link = `Check detailnya di https://tracking-issue.netlify.app/issue/${id}`;
   let body = {
-    message: `${author} ${info} ${link}`,
+    message: `${author}${info}${link}`,
   };
   store.postWa(body);
 };

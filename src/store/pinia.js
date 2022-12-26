@@ -20,6 +20,7 @@ export const mainStore = defineStore("main", {
     issue: [],
     webhook:
       "https://discordapp.com/api/webhooks/1055436509504884807/FXUBeQT4rN3XdQdrJ7dHiaoOA_c2hu00b0-V4bPPkwGzZt5eQpduGiZwfacSxPftjEXk",
+    env: "https://simple-discord-bot-jade.vercel.app",
   }),
 
   actions: {
@@ -69,8 +70,15 @@ export const mainStore = defineStore("main", {
     postDiscord(body) {
       axios.post(this.webhook, body);
     },
+    getInfoDevice() {
+      return new Promise((resolve, reject) => {
+        axios.get(`${this.env}/devices`).then((res) => {
+          resolve(res);
+        });
+      });
+    },
     postWa(body) {
-      axios.post("https://simple-discord-bot-jade.vercel.app/msg", body);
+      axios.post(`${this.env}/msg`, body);
     },
 
     getApi(path) {

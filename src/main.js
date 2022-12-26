@@ -15,6 +15,7 @@ import "quasar/src/css/index.sass";
 import router from "./router";
 // import db from "./plugins/firebase";
 import VueSocialSharing from "vue-social-sharing";
+import VueApexCharts from "vue3-apexcharts";
 import App from "./App.vue";
 const myApp = createApp(App);
 myApp.use(createPinia());
@@ -25,7 +26,8 @@ myApp
     plugins: { Notify }, // import Quasar plugins and add here
   })
   .use(VueSocialSharing)
-  .use(router);
+  .use(router)
+  .use(VueApexCharts);
 
 // Assumes you have a <div id="app"></div> in your index.html
 myApp.mount("#app");
