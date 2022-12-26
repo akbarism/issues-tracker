@@ -45,30 +45,13 @@ const store = mainStore();
 const props = defineProps({
   dialog: Boolean,
   id: null,
+  issue: null,
 });
 const vm = reactive({
   sending: false,
   listAct: [],
 });
 const emit = defineEmits(["close", "fetchLog"]);
-
-const listAct = [
-  {
-    label: "Comment",
-    value: "added a comment on this issue",
-    icon: "mdi-comment-outline",
-  },
-  {
-    label: "Tested",
-    value: "has tested this issue",
-    icon: "mdi-test-tube",
-  },
-  {
-    label: "Fixed",
-    value: "has fixed this issue",
-    icon: "mdi-auto-fix",
-  },
-];
 
 const fetchData = async () => {
   vm.sending = true;
@@ -98,7 +81,20 @@ const sendLog = async (msg) => {
   });
   emit("fetchLog");
   emit("close");
+  if (form.type.label == "Fixed") {
+    botWa();
+  }
   vm.sending = false;
+};
+
+const botWa = () => {
+  const author = `**${store.user.name}** menandai sebuah issue sebagai "Fixed" \n \n`;
+  const title = `judul : ${props.issue.title}\n\n`;
+  const link = `Check detailnya di https://tracking-issue.netlify.app/issue/${props.id}`;
+  let body = {
+    message: `${author}${title}${link}`,
+  };
+  store.postWa(body);
 };
 
 onMounted(() => {
