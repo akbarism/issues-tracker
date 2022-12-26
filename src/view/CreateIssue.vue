@@ -223,10 +223,11 @@ const forwardToDiscord = (id) => {
 
 const forwardToWa = (id) => {
   const author = `${store.user.name} membuat issue baru! \n \n`;
+  const title = `judul : ${form.title}\n`;
   const info = `Project : ${form.project}\nLayanan : ${form.layanan}\nKendala : ${form.kendala}\nstatus : open \n\n`;
   const link = `Check detailnya di https://tracking-issue.netlify.app/issue/${id}`;
   let body = {
-    message: `${author}${info}${link}`,
+    message: `${author}${title}${info}${link}`,
   };
   store.postWa(body);
 };

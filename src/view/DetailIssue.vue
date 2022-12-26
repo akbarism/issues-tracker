@@ -349,7 +349,7 @@ const swtichStatus = async (state) => {
     await updateDoc(queryDetail, {
       status: "closed",
     });
-    botWa(id);
+    botWa();
     let msg = {
       activity: "closed this issue",
       icon: "mdi-check-circle-outline",
@@ -361,16 +361,17 @@ const swtichStatus = async (state) => {
   }
 };
 
-const botWa = (id) => {
+const botWa = () => {
   const author = `${store.user.name} menutup sebuah issue \n \n`;
   const title = `judul : ${vm.issue.title}\n`;
   const info = `Project : ${vm.issue.project}\nLayanan : ${vm.issue.layanan}\nKendala : ${vm.issue.kendala}\nstatus : close \n\n`;
-  const link = `Check detailnya di https://tracking-issue.netlify.app/issue/${id}`;
+  const link = `Check detailnya di https://tracking-issue.netlify.app/issue/${id.value}`;
   let body = {
     message: `${author}${title}${info}${link}`,
   };
   store.postWa(body);
 };
+
 
 const getLog = (state) => {
   vm.waiting = true;
