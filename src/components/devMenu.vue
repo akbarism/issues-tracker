@@ -58,6 +58,11 @@ const menu = [
     path: "/responses-type",
     icon: "campaign",
   },
+  {
+    title: "Whatsapp Bot",
+    path: "/wa-bot",
+    icon: "mdi-whatsapp",
+  },
 ];
 </script>
 

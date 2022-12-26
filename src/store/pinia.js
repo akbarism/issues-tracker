@@ -81,6 +81,44 @@ export const mainStore = defineStore("main", {
       axios.post(`${this.env}/msg`, body);
     },
 
+    listenToWa() {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${this.env}/listener`)
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+
+    getQr() {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${this.env}/qr`)
+          .then((res) => {
+            resolve(res.data);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+    listGroup() {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${this.env}/group`)
+          .then((res) => {
+            resolve(res.data);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+
     getApi(path) {
       return new Promise((resolve, reject) => {
         const config = {

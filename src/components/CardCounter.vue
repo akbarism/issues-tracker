@@ -64,11 +64,13 @@
           <q-skeleton height="60px" class="rounded-lg mb-3" type="QSlider" />
         </div>
       </div>
-      <div class="pt-3">
+      <div class="pt-3 small_txt">
         Status Bot Whatsapp :
-        <span class="text-weight-bold">{{
-          status_bot ? "Online" : "Offline"
-        }}</span>
+        <span
+          class="text-weight-bold"
+          :style="`color : ${status_bot ? '#4caf50' : '#f44336'}`"
+          >{{ status_bot ? "Online" : "Offline" }}</span
+        >
       </div>
     </q-card-section>
   </q-card>

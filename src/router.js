@@ -56,6 +56,11 @@ const routes = [
         name: "responses-type",
         component: () => import("./view/developer/typeResponse.vue"),
       },
+      {
+        path: "/wa-bot",
+        name: "wa-bot",
+        component: () => import("./view/developer/configWa.vue"),
+      },
     ],
   },
 ];
