@@ -107,7 +107,9 @@ const generateQr = () => {
 
 const getGroup = () => {
   store.listGroup().then((res) => {
-    vm.groups = res.data;
+    if (res.data) {
+      vm.groups = res.data;
+    }
   });
 };
 
