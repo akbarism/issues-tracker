@@ -70,6 +70,16 @@ export const mainStore = defineStore("main", {
     postDiscord(body) {
       axios.post(this.webhook, body);
     },
+    checkApp() {
+      return new Promise((resolve, reject) => {
+        axios.get(`${this.env}/`).then((res) => {
+          resolve(res);
+        });
+      });
+    },
+    postWa(body) {
+      axios.post(`${this.env}/msg`, body);
+    },
     getInfoDevice() {
       return new Promise((resolve, reject) => {
         axios.get(`${this.env}/devices`).then((res) => {

@@ -114,5 +114,8 @@ const getDevice = () => {
 onMounted(() => {
   getDevice();
   fetchData();
+  store.checkApp().then((res) => {
+    console.log(res);
+  });
 });
 </script>
