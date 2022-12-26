@@ -17,6 +17,12 @@
       <div class="mb-3">
         <p class="q-mb-none text-weight-medium">Catatan</p>
         <q-editor v-model="form.catatan" min-height="5rem" />
+        <q-checkbox
+          v-model="vm.sendWa"
+          v-if="form.type.label == 'Fixed'"
+          label="Kirim ke grup"
+          color="blue"
+        />
       </div>
     </q-card-section>
     <q-card-actions align="right">
@@ -50,6 +56,7 @@ const props = defineProps({
 const vm = reactive({
   sending: false,
   listAct: [],
+  sendWa: false,
 });
 const emit = defineEmits(["close", "fetchLog"]);
 
@@ -81,14 +88,14 @@ const sendLog = async (msg) => {
   });
   emit("fetchLog");
   emit("close");
-  if (form.type.label == "Fixed") {
+  if (vm.sendWa) {
     botWa();
   }
   vm.sending = false;
 };
 
 const botWa = () => {
-  const author = `**${store.user.name}** menandai sebuah issue sebagai "Fixed" \n \n`;
+  const author = `*${store.user.name}* menandai sebuah issue sebagai "Fixed" \n \n`;
   const title = `judul : ${props.issue.title}\n\n`;
   const link = `Check detailnya di https://tracking-issue.netlify.app/issue/${props.id}`;
   let body = {

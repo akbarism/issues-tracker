@@ -225,6 +225,7 @@
         <q-dialog v-model="vm.dialog">
           <ResponedIssue
             :dialog="vm.dialog"
+            :issue="vm.issue"
             :id="id"
             @close="vm.dialog = false"
             @fetchLog="getLog()"
@@ -362,7 +363,7 @@ const swtichStatus = async (state) => {
 };
 
 const botWa = () => {
-  const author = `**${store.user.name}** menutup sebuah issue \n \n`;
+  const author = `*${store.user.name}* menutup sebuah issue \n \n`;
   const title = `judul : ${vm.issue.title}\n`;
   const info = `Project : ${vm.issue.project}\nLayanan : ${vm.issue.layanan}\nKendala : ${vm.issue.kendala}\nstatus : close \n\n`;
   const link = `Check detailnya di https://tracking-issue.netlify.app/issue/${id.value}`;
@@ -371,7 +372,6 @@ const botWa = () => {
   };
   store.postWa(body);
 };
-
 
 const getLog = (state) => {
   vm.waiting = true;
