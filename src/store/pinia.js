@@ -81,8 +81,9 @@ export const mainStore = defineStore("main", {
       axios.post(`${this.env}/msg`, body);
     },
     getInfoDevice() {
+      let host = "localhost:2000";
       return new Promise((resolve, reject) => {
-        axios.get(`${this.env}/devices`).then((res) => {
+        axios.get(`${host}/devices`).then((res) => {
           resolve(res);
         });
       });
