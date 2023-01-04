@@ -28,6 +28,11 @@
               <p class="small_txt q-mb-none" v-html="log.catatan"></p>
             </div>
           </q-card>
+          <q-card class="rounded-lg" flat bordered v-if="log.img">
+            <div class="px-2 py-2">
+              <img :src="log.img" alt="anu" style="width: 100%;" class="rounded" />
+            </div>
+          </q-card>
         </div>
       </div>
     </div>

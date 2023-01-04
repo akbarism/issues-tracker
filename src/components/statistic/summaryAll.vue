@@ -1,7 +1,9 @@
 <template>
   <q-card class="pa-2 rounded-lg" v-if="vm.chart">
     <div class="px-3">
-      <p style="font-size: 18px" class="text-weight-bold q-mb-none">All Issue</p>
+      <p style="font-size: 18px" class="text-weight-bold q-mb-none">
+        All Issue
+      </p>
     </div>
     <apexchart
       type="area"
@@ -33,11 +35,12 @@ const getIssue = async () => {
   qs.forEach((el) => {
     res.push(el.data());
   });
+
   let grouped = groupBy(res, "month");
   let category = [];
   let series = [];
   for (let i in grouped) {
-    let format = day(`01-${i}`, "DD-MM-YYYY").format("MMM");
+    let format = day(`01-${i}`, "DD-MM-YYYY").format("MMM YYYY");
     category.push(format);
     series.push(grouped[i].length);
   }
@@ -46,6 +49,7 @@ const getIssue = async () => {
 };
 
 const makeChart = (raw) => {
+ ;
   let conf = {
     series: [
       {
@@ -75,7 +79,7 @@ const makeChart = (raw) => {
       },
       tooltip: {
         x: {
-          format: "MMMM",
+          format: "YYYY",
         },
       },
     },
