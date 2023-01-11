@@ -50,15 +50,17 @@
       </div>
     </q-card-section>
     <q-card-actions align="right">
-      <q-btn
-        v-if="form.type"
-        @click="validate"
-        unelevated
-        class="text-capitalize"
-        label="Submit"
-        color="blue"
-        size="md"
-      />
+      <div style="min-width: 300px">
+        <q-btn
+          v-if="form.type"
+          @click="validate"
+          unelevated
+          class="text-capitalize"
+          label="Submit"
+          color="blue"
+          size="md"
+        />
+      </div>
     </q-card-actions>
     <backdrop v-if="vm.sending" />
   </q-card>
